@@ -6,7 +6,7 @@ class String2emoji(object):
     def __init__(self, argText,argFontName):
         self.textList = argText
         self.fontName = argFontName
-        self.backColor = (255,255,255,255)
+        self.backColor = (255,255,255,0)
         self.imageSize = (128,128)
 
     def getFont(self,size):
@@ -47,10 +47,10 @@ class String2emoji(object):
             if limitFlag > 0:
                 return y
     def stringUnderBorderX(self,text,font,x0):
-        img = Image.new("RGBA",(128,128),self.backColor)
+        img = Image.new("RGBA",(256,128),self.backColor)
         draw = ImageDraw.Draw(img)
         draw.text((x0,0), text.decode('mbcs'), fill=(0,0,0), font=font)
-        for cx in range(127,0,-1):
+        for cx in range(255,0,-1):
             for cy in range(0,128):
                 color = img.getpixel((cx,cy))
                 if color != self.backColor:
@@ -70,13 +70,14 @@ class String2emoji(object):
         draw = ImageDraw.Draw(img)
         l = len(self.textList)
         if l == 1:
-            (size,x0,y0,x1,y1) = self.cutEffectiveRange(self.textList[0],128,64)
+            (size,x0,y0,x1,y1) = self.cutEffectiveRange(self.textList[0],128,128)
             font = self.getFont(size)
-            draw.text((x0,y0+y1/2), self.textList[0].decode('mbcs'), fill=(0,0,0), font=font)
+            draw.text((x0,y0+abs(128-y1)/2), self.textList[0].decode('mbcs'), fill=(0,0,0), font=font)
             return img
 
         for i in range(0,l):
-            (size,x0,y0,x1,y1) = self.cutEffectiveRange(self.textList[0],128,64)
+            (size,x0,y0,x1,y1) = self.cutEffectiveRange(self.textList[0],128,128/l)
             font = self.getFont(size)
-            draw.text((x0,y0+(128/l*i)), self.textList[i].decode('mbcs'), fill=(0,0,0), font=font)
+
+            draw.text((x0+(abs(128-x1)/2),y0+(128/l*i)), self.textList[i].decode('mbcs'), fill=(0,0,0), font=font)
         return img

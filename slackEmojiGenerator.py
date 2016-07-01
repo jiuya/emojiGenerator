@@ -5,7 +5,7 @@ argvs = sys.argv
 argc = len(argvs)
 
 if __name__ == '__main__':
-    fontFile = 'meiryo.ttc'
+    fontFile = 'meiryob.ttc'
     text = []
     for num in range(1,argc):
         text.append(argvs[num])

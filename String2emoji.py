@@ -76,8 +76,7 @@ class String2emoji(object):
             return img
 
         for i in range(0,l):
-            (size,x0,y0,x1,y1) = self.cutEffectiveRange(self.textList[0],128,128/l)
+            (size,x0,y0,x1,y1) = self.cutEffectiveRange(self.textList[i],128,128/l)
             font = self.getFont(size)
-
             draw.text((x0+(abs(128-x1)/2),y0+(128/l*i)), self.textList[i].decode('mbcs'), fill=(0,0,0), font=font)
         return img

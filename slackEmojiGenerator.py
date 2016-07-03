@@ -7,6 +7,8 @@ argc = len(argvs)
 if __name__ == '__main__':
     fontFile = 'meiryob.ttc'
     text = []
+    if argc == 1:
+        exit()
     for num in range(1,argc):
         text.append(argvs[num])
 

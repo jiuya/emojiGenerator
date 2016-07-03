@@ -15,5 +15,8 @@ if __name__ == '__main__':
     emoji = String2emoji(text,fontFile)
 
     img = emoji.getEmoji()
-
-    img.save('test.png')
+    saveFile = 'emoji_'
+    for i in range(0,argc-1):
+        saveFile += text[i].decode('mbcs')
+    saveFile += '.png'
+    img.save(saveFile)

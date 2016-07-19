@@ -27,7 +27,7 @@ class String2emoji(object):
             y0 = self.stringOverBorderY(text,font)
             x1 = self.stringUnderBorderX(text,font,x0,w)
             y1 = self.stringUnderBorderY(text,font,y0,h)
-            if (x1 >= wMax-1) or (y1 >= hMax-1) :
+            if (y1 >= hMax-1) :
                 return (i-1,x0,y0,x1,y1);
     def stringOverBorderX(self,text,font):
         for x in range(0,-128,-1):
@@ -54,10 +54,10 @@ class String2emoji(object):
             if limitFlag > 0:
                 return y
     def stringUnderBorderX(self,text,font,x0,w):
-        img = Image.new("RGBA",(256,128),self.backColor)
+        img = Image.new("RGBA",(w,128),self.backColor)
         draw = ImageDraw.Draw(img)
         draw.text((x0,0), text.decode('mbcs'), fill=self.fontColor, font=font)
-        for cx in range(255,0,-1):
+        for cx in range(w-1,0,-1):
             for cy in range(0,128):
                 color = img.getpixel((cx,cy))
                 if color != self.backColor:
@@ -83,7 +83,13 @@ class String2emoji(object):
             return img
 
         for i in range(0,l):
+            img_str = Image.new("RGBA",(256,128),self.backColor)
+            draw = ImageDraw.Draw(img_str)
             (size,x0,y0,x1,y1) = self.cutEffectiveRange(self.textList[i],128,128/l)
             font = self.getFont(size)
-            draw.text((x0+(abs(128-x1)/2),y0+(128/l*i)), self.textList[i].decode('mbcs'), fill=self.fontColor, font=font)
+            draw.text((x0,y0), self.textList[i].decode('mbcs'), fill=self.fontColor, font=font)
+            img_str.crop((0,0,x1,y1))
+            if(x1 > 128):
+                img_str = img_str.transform(img_str.size,Image.AFFINE,(x1/128.0,0,0,0,1,0),Image.BICUBIC)
+            img.paste(img_str,(0,(128/l)*i))
         return img

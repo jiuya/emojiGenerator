@@ -7,6 +7,7 @@ argc = len(argvs)
 if __name__ == '__main__':
     fontFile = 'NotoSansCJKjp-hinted/NotoSansMonoCJKjp-Bold.otf'
     text = []
+    (r,g,b) = (0,0,0)
     if argc == 1:
         exit()
     for num in range(1,argc):

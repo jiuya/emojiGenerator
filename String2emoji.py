@@ -20,13 +20,13 @@ class String2emoji(object):
     def setFontColor(self,color):
         self.fontColor = color
     def cutEffectiveRange(self,text,wMax,hMax):
-        for i in range(8,hMax*2):
+        for i in range(hMax,hMax*2):
             font = self.getFont(i)
             w, h = font.getsize(text)
             x0 = self.stringOverBorderX(text,font)
             y0 = self.stringOverBorderY(text,font)
-            x1 = self.stringUnderBorderX(text,font,x0)
-            y1 = self.stringUnderBorderY(text,font,y0)
+            x1 = self.stringUnderBorderX(text,font,x0,w)
+            y1 = self.stringUnderBorderY(text,font,y0,h)
             if (x1 >= wMax-1) or (y1 >= hMax-1) :
                 return (i-1,x0,y0,x1,y1);
     def stringOverBorderX(self,text,font):
@@ -53,7 +53,7 @@ class String2emoji(object):
                     limitFlag = 1;
             if limitFlag > 0:
                 return y
-    def stringUnderBorderX(self,text,font,x0):
+    def stringUnderBorderX(self,text,font,x0,w):
         img = Image.new("RGBA",(256,128),self.backColor)
         draw = ImageDraw.Draw(img)
         draw.text((x0,0), text.decode('mbcs'), fill=self.fontColor, font=font)
@@ -62,7 +62,7 @@ class String2emoji(object):
                 color = img.getpixel((cx,cy))
                 if color != self.backColor:
                     return cx;
-    def stringUnderBorderY(self,text,font,y0):
+    def stringUnderBorderY(self,text,font,y0,h):
         img = Image.new("RGBA",(128,128),self.backColor)
         draw = ImageDraw.Draw(img)
         draw.text((0,y0), text.decode('mbcs'), self.fontColor, font=font)

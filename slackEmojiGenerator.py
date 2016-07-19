@@ -5,7 +5,7 @@ argvs = sys.argv
 argc = len(argvs)
 
 if __name__ == '__main__':
-    fontFile = 'meiryob.ttc'
+    fontFile = 'NotoSansCJKjp-hinted/NotoSansMonoCJKjp-Bold.otf'
     text = []
     if argc == 1:
         exit()

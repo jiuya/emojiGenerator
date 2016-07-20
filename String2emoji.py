@@ -23,31 +23,31 @@ class String2emoji(object):
         for i in range(hMax,hMax*2):
             font = self.getFont(i)
             w, h = font.getsize(text)
-            x0 = self.stringOverBorderX(text,font)
-            y0 = self.stringOverBorderY(text,font)
+            x0 = self.stringOverBorderX(text,font,h)
+            y0 = self.stringOverBorderY(text,font,w)
             x1 = self.stringUnderBorderX(text,font,x0,w)
             y1 = self.stringUnderBorderY(text,font,y0,h)
             if (y1 >= hMax-1) :
                 return (i-1,x0,y0,x1,y1);
-    def stringOverBorderX(self,text,font):
+    def stringOverBorderX(self,text,font,h):
         for x in range(0,-128,-1):
-            img = Image.new("RGBA",(128,128),self.backColor)
+            img = Image.new("RGBA",(128,h),self.backColor)
             draw = ImageDraw.Draw(img)
             draw.text((x,0), text.decode('mbcs'), fill=self.fontColor, font=font)
             limitFlag = 0
-            for i in range(0,128):
+            for i in range(0,h):
                 color = img.getpixel((0,i))
                 if color != self.backColor:
                     limitFlag = 1;
             if limitFlag > 0:
                 return x
-    def stringOverBorderY(self,text,font):
+    def stringOverBorderY(self,text,font,w):
         for y in range(0,-128,-1):
-            img = Image.new("RGBA",(128,128),self.backColor)
+            img = Image.new("RGBA",(w,128),self.backColor)
             draw = ImageDraw.Draw(img)
             draw.text((0,y), text.decode('mbcs'), fill=self.fontColor, font=font)
             limitFlag = 0
-            for i in range(0,128):
+            for i in range(0,w):
                 color = img.getpixel((i,0))
                 if color != self.backColor:
                     limitFlag = 1;

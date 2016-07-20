@@ -1,28 +1,35 @@
 # -*- coding: utf-8 -*-
 import sys
 from String2emoji import String2emoji
-argvs = sys.argv
-argc = len(argvs)
+import argparse
 
-if __name__ == '__main__':
-    fontFile = 'NotoSansCJKjp-hinted/NotoSansMonoCJKjp-Bold.otf'
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('messages', type=str, nargs='+', help='emoji message')
+    parser.add_argument('-f', '--font', type=str, nargs='?', help='set font (default=NotoSansCJKjp-hinted/NotoSansMonoCJKjp-Bold.otf)')
+    parser.add_argument('-o', '--out', type=str, nargs='?', help='output image file (default=test.png)')
+    parser.add_argument('-c', '--color',type=str, nargs='?',help='set font color(default=000000')
+    parser.set_defaults(font='NotoSansCJKjp-hinted/NotoSansMonoCJKjp-Bold.otf', out='test.png',color='000000')
+
+    args = parser.parse_args()
+
+    argv = args.messages
+    argc = len(argv)
+
+    fontFile = args.font
+    imageFile = args.out 
+    r = int(args.color[0] +args.color[1],16)
+    g = int(args.color[2] +args.color[3],16)
+    b = int(args.color[4] +args.color[5],16)
+
     text = []
-    (r,g,b) = (0,0,0)
-    if argc == 1:
-        exit()
-    for num in range(1,argc):
-        if(argvs[num][0] == '#'):
-            r = int(argvs[num][1]+argvs[num][2],16)
-            g = int(argvs[num][3]+argvs[num][4],16)
-            b = int(argvs[num][5]+argvs[num][6],16)
-        else:
-            text.append(argvs[num])
-
-    emoji = String2emoji(text,fontFile,(r,g,b))
+    for num in range(0, argc):
+        text.append(argv[num])
+    emoji = String2emoji(text, fontFile,(r,g,b))
 
     img = emoji.getEmoji()
-    saveFile = 'emoji_'
-    for i in range(0,len(text)):
-        saveFile += text[i].decode('mbcs')
-    saveFile += '.png'
-    img.save(saveFile)
+
+    img.save(imageFile)
+
+if __name__ == '__main__':
+    main()

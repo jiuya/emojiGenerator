@@ -11,4 +11,4 @@ slackのemojiを自動生成する
 ![test.png](test.png)
 
 ## exeファイルの生成
->pyinstaller slackEmojiGenerator.py --onefile --noconsole
+>pyinstaller slackEmojiGenerator.py --onefile --console

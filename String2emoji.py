@@ -27,7 +27,7 @@ class String2emoji(object):
             y0 = self.stringOverBorderY(text,font,w)
             x1 = self.stringUnderBorderX(text,font,x0,w)
             y1 = self.stringUnderBorderY(text,font,y0,h)
-            if (y1 >= hMax-1) :
+            if (x1 >= wMax-1) or (y1 >= hMax-1) :
                 return (i-1,x0,y0,x1,y1);
     def stringOverBorderX(self,text,font,h):
         for x in range(0,-128,-1):
@@ -76,16 +76,11 @@ class String2emoji(object):
         img = Image.new("RGBA",self.imageSize,self.backColor)
         draw = ImageDraw.Draw(img)
         l = len(self.textList)
-        if l == 1:
-            (size,x0,y0,x1,y1) = self.cutEffectiveRange(self.textList[0],128,128)
-            font = self.getFont(size)
-            draw.text((x0,y0+abs(128-y1)/2), self.textList[0].decode('mbcs'), fill=self.fontColor, font=font)
-            return img
-
+        
         for i in range(0,l):
             img_str = Image.new("RGBA",(len(self.textList[i])*64,128),self.backColor)
             draw = ImageDraw.Draw(img_str)
-            (size,x0,y0,x1,y1) = self.cutEffectiveRange(self.textList[i],128,128/l)
+            (size,x0,y0,x1,y1) = self.cutEffectiveRange(self.textList[i],len(self.textList[i])*64,128/l)
             font = self.getFont(size)
             draw.text((x0,y0), self.textList[i].decode('mbcs'), fill=self.fontColor, font=font)
             img_str.crop((0,0,x1,y1))

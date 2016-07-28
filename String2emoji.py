@@ -20,12 +20,12 @@ class String2emoji(object):
     def setFontColor(self,color):
         self.fontColor = color
     def cutEffectiveRange(self,text,wMax,hMax):
-        for i in range(hMax,hMax*2):
+        for i in range(hMax/2,hMax*2):
             font = self.getFont(i)
             w, h = font.getsize(text)
             x0 = self.stringOverBorderX(text,font,h)
             y0 = self.stringOverBorderY(text,font,w)
-            x1 = self.stringUnderBorderX(text,font,x0,w)
+            x1 = self.stringUnderBorderX(text,font,x0,w+2)
             y1 = self.stringUnderBorderY(text,font,y0,h)
             if (x1 >= wMax-1) or (y1 >= hMax-1) :
                 return (i-1,x0,y0,x1,y1);
@@ -76,15 +76,22 @@ class String2emoji(object):
         img = Image.new("RGBA",self.imageSize,self.backColor)
         draw = ImageDraw.Draw(img)
         l = len(self.textList)
-        
+
         for i in range(0,l):
             img_str = Image.new("RGBA",(len(self.textList[i])*64,128),self.backColor)
             draw = ImageDraw.Draw(img_str)
             (size,x0,y0,x1,y1) = self.cutEffectiveRange(self.textList[i],len(self.textList[i])*64,128/l)
+            #(size,x0,y0,x1,y1) = self.cutEffectiveRange(self.textList[i],256,128/l)
             font = self.getFont(size)
             draw.text((x0,y0), self.textList[i].decode('mbcs'), fill=self.fontColor, font=font)
             img_str.crop((0,0,x1,y1))
-            if(x1 > 128):
+            if x1 > 128:
                 img_str = img_str.transform(img_str.size,Image.AFFINE,(x1/128.0,0,0,0,1,0),Image.BICUBIC)
-            img.paste(img_str,(0,(128/l)*i))
+                image_paste_x = 0;
+            else:
+                image_paste_x = (128-x1)/2
+            if l != 1:
+                img.paste(img_str,(image_paste_x,(128/l)*i))
+            else:
+                img.paste(img_str,(image_paste_x,(128-y1)/2))
         return img
